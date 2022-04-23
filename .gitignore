@@ -1,8 +1,8 @@
 .idea/
 .vscode/
 
-*/exec/config.yaml
-*/exec/current.yaml
-*/dist/
+/exec/config.yaml
+/exec/current.yaml
+/dist/
 *.pem
 *.log
