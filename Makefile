@@ -37,7 +37,7 @@ macos-arm64:
 	GOOS=darwin GOARCH=arm64 go build $(build_flags) -o $(macos_arm64_dist)/$(exec_file) $(exec_package)
 windows-amd64:
 	mkdir -p $(windows_amd64_dist)
-	GOOS=windows GOARCH=amd64 go build $(build_flags) -o $(windows_amd64_dist)/$(exec_file) $(exec_package)
+	GOOS=windows GOARCH=amd64 go build $(build_flags) -o $(windows_amd64_dist)/$(exec_file).exe $(exec_package)
 windows-386:
 	mkdir -p $(windows_386_dist)
-	GOOS=windows GOARCH=386 go build $(build_flags) -o $(windows_386_dist)/$(exec_file) $(exec_package)
+	GOOS=windows GOARCH=386 go build $(build_flags) -o $(windows_386_dist)/$(exec_file).exe $(exec_package)
