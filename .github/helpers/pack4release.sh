@@ -23,5 +23,4 @@ unset ORIGINAL_PWD_GETSELFPATHVAR SH_FILE_RUN_PATH_GETSELFPATHVAR SH_FILE_RUN_BA
 
 cd "$SH_SELF_PATH_DIR_RESULT"/../../dist || return 1
 
-find . -type d -depth 1 -exec tar cavf {}.tar.gz {} \;
-
+find . -maxdepth 1 -mindepth 1 -type d -exec tar cavf {}.tar.gz {} \;
