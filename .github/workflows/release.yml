@@ -28,9 +28,7 @@ jobs:
         run: make release
 
       - name: Pack
-        run: |
-          cd dist
-          find . -type d -depth 1 -exec tar cavf {}.tar.gz {} \;
+        run: bash "${{ github.workspace }}/.github/helpers/pack4release.sh"
 
       - uses: ncipollo/release-action@v1
         with:
