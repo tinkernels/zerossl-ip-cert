@@ -1,0 +1,16 @@
+# This file will be generated after issuing certificates.
+# So it's just a sample to show structure of the file.
+certs:
+  # Use confId to identify the certificate configuration
+  - commonName: 4.3.2.1
+    # Match confID in config file
+    confID: xx1
+    certId: 1234567890abcdef0
+    certFile: /var/local/zerossl/cert0.pem
+    keyFile: /var/local/zerossl/key0.pem
+
+  - commonName: 1.2.3.4
+    confId: xx2
+    certId: 1234567890abcdef1
+    certFile: /var/local/zerossl/cert1.pem
+    keyFile: /var/local/zerossl/key1.pem

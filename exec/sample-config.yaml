@@ -1,0 +1,60 @@
+dataDir: /var/local/zerossl # Data directory for containing the status and temporary files
+logFile: /var/local/zerossl/log.txt # Log file
+certConfigs:
+  # Use confId to identify the certificate configuration
+  - commonName: 4.3.2.1
+    # mandatory
+    confId: xx1
+    # your zerossl api key
+    apiKey: xxx-xxx
+    ######## CSR INFO ########
+    country: US
+    province: CA
+    city: San Francisco
+    locality: San Francisco
+    organization: Earth
+    organizationUnit: Development
+    ######## CSR INFO ########
+    # certificate validity in days
+    days: 90
+    # key type, ecdsa or rsa
+    keyType: ecdsa
+    # rsa key bits
+    keyBits: 2048
+    # ecdsa curve, P-256 or P-384
+    keyCurve: P-256
+    # signature algorithm, ECDSA-SHA256 or SHA256-RSA or ECDSA-SHA384 or SHA384-RSA
+    sigAlg: ECDSA-SHA256
+    # fixed
+    strictDomains: 1
+    # fixed
+    verifyMethod: HTTP_CSR_HASH
+    # verify hook executable, will be called before verifying domains
+    verifyHook: /var/local/zerossl/verify-hook.sh
+    # post hook executable, will be called after certificates arrival
+    postHook: /var/local/zerossl/post-hook.sh
+    # certificate store path
+    certFile: /var/local/zerossl/cert0.pem
+    # key store path
+    keyFile: /var/local/zerossl/key0.pem
+
+  - commonName: 1.2.3.4
+    confId: xx2
+    apiKey: xxx-xxx
+    country: US
+    province: CA
+    city: San Francisco
+    locality: San Francisco
+    organization: Earth
+    organizationUnit: Development
+    days: 90
+    keyType: ecdsa
+    keyBits: 2048
+    keyCurve: P-256
+    sigAlg: ECDSA-SHA256
+    strictDomains: 1
+    verifyMethod: HTTP_CSR_HASH
+    verifyHook: /var/local/zerossl/verify-hook.sh
+    postHook: /var/local/zerossl/post-hook.sh
+    certFile: /var/local/zerossl/cert1.pem
+    keyFile: /var/local/zerossl/key1.pem
