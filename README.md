@@ -1,4 +1,4 @@
-# zerossl-ip-cert &middot; [![License](https://img.shields.io/hexpm/l/plug?logo=Github&style=plastic)](https://github.com/tinkernels/zerossl-ip-cert/blob/master/LICENSE)
+# zerossl-ip-cert &middot; [![License](https://img.shields.io/hexpm/l/plug?logo=Github&style=flat)](https://github.com/tinkernels/zerossl-ip-cert/blob/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/tinkernels/zerossl-ip-cert)](https://goreportcard.com/report/github.com/tinkernels/zerossl-ip-cert) [![Go Reference](https://pkg.go.dev/badge/github.com/tinkernels/zerossl-ip-cert.svg)](https://pkg.go.dev/github.com/tinkernels/zerossl-ip-cert) [![Build workflow](https://github.com/tinkernels/zerossl-ip-cert/actions/workflows/build.yml/badge.svg)](https://github.com/tinkernels/zerossl-ip-cert/actions/workflows/build.yml)
 
 zerossl-ip-cert is a automation tool for issuing ZeroSSL IP certificates.
 
