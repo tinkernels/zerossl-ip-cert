@@ -1,0 +1,40 @@
+name: release
+
+on:
+  push:
+    tags:
+      - '*'
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Manually release'
+        required: false
+        default: 'Mona the Octocat'
+
+jobs:
+
+   release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set up Go 1.18
+        uses: actions/setup-go@v3
+        with:
+          go-version: 1.18
+
+      - name: Check out code into the Go module directory
+        uses: actions/checkout@v3
+
+      - name: Build
+        run: make release
+
+      - name: Pack
+        run: |
+          cd dist
+          find . -type d -depth 1 -exec tar cavf {}.tar.gz {} \;
+
+      - uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: "dist/*.tar.gz"
+          generateReleaseNotes: true
+          token: ${{ secrets.GITHUB_TOKEN }}
