@@ -156,14 +156,14 @@ func GenEccCSR(subj pkix.Name, key *ecdsa.PrivateKey, sigAlg x509.SignatureAlgor
 
 // WriteRsaPrivKeyPem writes an RSA private key to a PEM file.
 func WriteRsaPrivKeyPem(out io.Writer, key *rsa.PrivateKey) (err error) {
-	err = pem.Encode(out, &pem.Block{Type: "PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
+	err = pem.Encode(out, &pem.Block{Type: "RSA PRIVATE KEY", Bytes: x509.MarshalPKCS1PrivateKey(key)})
 	return
 }
 
 // WriteEccPrivKeyPem writes an ECC private key to a PEM file.
 func WriteEccPrivKeyPem(out io.Writer, key *ecdsa.PrivateKey) (err error) {
 	privKBytes_, _ := x509.MarshalECPrivateKey(key)
-	err = pem.Encode(out, &pem.Block{Type: "PRIVATE KEY", Bytes: privKBytes_})
+	err = pem.Encode(out, &pem.Block{Type: "EC PRIVATE KEY", Bytes: privKBytes_})
 	return
 }
 
