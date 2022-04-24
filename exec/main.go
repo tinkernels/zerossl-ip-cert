@@ -34,7 +34,7 @@ import (
 )
 
 // Version is the version of this application.
-const Version = "0.5.0"
+const Version = "0.5.2"
 
 var (
 	renewFlag  = flag.Bool("renew", false, "Renew existing certs only")
