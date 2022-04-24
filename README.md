@@ -6,18 +6,17 @@ zerossl-ip-cert is a automation tool for issuing ZeroSSL IP certificates.
 * Mainly made for **IP** certificates.
 * Call external program for automatically verification.
 * Painless certificate renewal.
+* Cross platform (Linux/Macos/Windows).
 
 ## Installation
 
 * Package zerossl-ip-cert contains ZeroSSL [REST API](https://zerossl.com/documentation/api/) client, one can
   just `go get github.com/tinkernels/zerossl-ip-cert` and import it to use the client.
-* To build static executables, clone this repository and `make release` , or you can make your desire target
-  binary, just take a look at the [Makefile](https://github.com/tinkernels/zerossl-ip-cert/blob/master/Makefile).
+* To build static executables, clone this repository and `make release` , or you can make your desire target binary, just take a look at the [Makefile](https://github.com/tinkernels/zerossl-ip-cert/blob/master/Makefile).
 
 ## Usage
 
-zerossl-ip-cert rely on configuration file to run. To archive the goal of issuing certificate automatically, you need do
-some additional work, saying the external hook.
+zerossl-ip-cert rely on configuration file to run. To archive the goal of issuing certificate automatically, you need do some additional work, saying the external hook.
 
 ### Usage Info
 
@@ -34,15 +33,13 @@ Usage: zerossl-ip-cert [ -renew ] -config CONFIG_FILE
 
 ### Configuration File
 
-You can find a sample configuration
-file [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-config.yaml), with enough comments
-in it. And also a state record sample
-file [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-current.yaml), just for troubleshooting.
+You can find a sample configurationfile [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-config.yaml), with enough commentsin it.
+
+ And also a state record sample file [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-current.yaml), just for troubleshooting.
 
 ### External Hook
 
-zerossl-ip-cert use `HTTP_CSR_HASH` validation method to verify domains (including ip address surely), get more
-information from the ZeroSSL official [documentation](https://zerossl.com/documentation/api/verify-domains/).
+zerossl-ip-cert use `HTTP_CSR_HASH` validation method to verify domains (including ip address surely), get more information from the ZeroSSL official [documentation](https://zerossl.com/documentation/api/verify-domains/).
 
 So you should have a http server running and prepare hook programs to finish the domain verification.
 
@@ -56,8 +53,9 @@ So you should have a http server running and prepare hook programs to finish the
 
   `ZEROSSL_HTTP_FV_CONTENT` stands for validation content, ZeroSSL will check it when domain verification started.
 
-  And a sample script for nginx can be
-  found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-nginx-verify-hook.sh).
+  And a sample script for nginx can be found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-nginx-verify-hook.sh), a sample script for caddy can be found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-caddy-verify-hook.cmd).
+
+  P.S. When running in **Windows OS**, text lines is concatenaed with spaces in `%ZEROSSL_HTTP_FV_CONTENT%` as windows don't accept multiline variables without using magic.
 
 * **post-hook** will be called after certification downloading, and some other environment variables will be pass to it.
 
@@ -65,8 +63,7 @@ So you should have a http server running and prepare hook programs to finish the
 
   `ZEROSSL_KEY_FPATH` stands for the store path of private key.
 
-  And a sample script for nginx can be
-  found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-nginx-post-hook.sh).
+  And a sample script for nginx can be found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-nginx-post-hook.sh), a sample script for caddy can be found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-caddy-post-hook.cmd).
 
 ## License
 

@@ -27,13 +27,14 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
 )
 
 // Version is the version of this application.
-const Version = "0.4.2"
+const Version = "0.5.0"
 
 var (
 	renewFlag  = flag.Bool("renew", false, "Renew existing certs only")
@@ -127,6 +128,12 @@ func issueCert(conf *CertConf) (err error) {
 		}
 	}
 	log.Printf("Cert for domain %v does not exist, try issue.\n", conf.CommonName)
+	client_ := &zerosslIPCert.Client{ApiKey: conf.ApiKey}
+	if usingConfig.CleanUnfinished {
+		if err := client_.CleanUnfinished(); err != nil {
+			log.Printf("Failed to clean unfinished issuing certificate: %v\n", err)
+		}
+	}
 	certId_, err := issueCertImpl(conf)
 	if err == nil {
 		log.Printf("Cert for domain %v issued successfully.\n", conf.CommonName)
@@ -289,7 +296,13 @@ func runVerifyHook(executable string, cerInfo *zerosslIPCert.CertificateInfoMode
 			if port_ == "" {
 				port_ = "80"
 			}
-			content_ := strings.Join(v.FileValidationContent, "\n")
+			var content_ string
+			// Concatenate file content with spaces.
+			if runtime.GOOS == "windows" {
+				content_ = strings.Join(v.FileValidationContent, " ")
+			} else {
+				content_ = strings.Join(v.FileValidationContent, "\n")
+			}
 			// Prepare hook exec env.
 			cmdEnv_ := os.Environ()
 			cmdEnv_ = append(cmdEnv_, fmt.Sprintf("%v=%v", "ZEROSSL_HTTP_FV_HOST", host_))
@@ -380,6 +393,11 @@ func renewCert(id string, conf *CertConf) (err error) {
 	if certInfo_.Status != zerosslIPCert.CertStatus.ExpiringSoon {
 		log.Printf("Cert %v is not due for renewal, skip renewing.\n", conf.CommonName)
 		return nil
+	}
+	if usingConfig.CleanUnfinished {
+		if err := client_.CleanUnfinished(); err != nil {
+			log.Printf("Failed to clean unfinished issuing certificate: %v\n", err)
+		}
 	}
 	certId_, err := issueCertImpl(conf)
 	if err == nil {

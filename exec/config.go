@@ -46,9 +46,10 @@ type CertConf struct {
 }
 
 type Config struct {
-	DataDir     string     `yaml:"dataDir"`
-	LogFile     string     `yaml:"logFile"`
-	CertConfigs []CertConf `yaml:"certConfigs"`
+	DataDir         string     `yaml:"dataDir"`
+	LogFile         string     `yaml:"logFile"`
+	CleanUnfinished bool       `yaml:"cleanUnfinished"`
+	CertConfigs     []CertConf `yaml:"certConfigs"`
 }
 
 // ReadConfig reads the config file and returns a Config struct.

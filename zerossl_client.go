@@ -22,6 +22,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 // Client is a client for ZeroSSL.
@@ -188,6 +189,34 @@ func (c *Client) ListCerts(status, search, limit, page string) (listCertsRsp Lis
 	err = json.NewDecoder(resp.Body).Decode(&listCertsRsp)
 	if err != nil {
 		return ListCertsModel{}, err
+	}
+	return
+}
+
+func (c *Client) CleanUnfinished() (err error) {
+	log.Println("Cleaning unfinished certificates")
+	perPage_ := 100
+	page_ := 1
+	for allCerts_, err := c.ListCerts("", "", strconv.Itoa(perPage_), strconv.Itoa(page_)); true; page_++ {
+		if err != nil {
+			log.Println(err)
+			break
+		}
+
+		for _, cert := range allCerts_.Results {
+			if cert.Status == CertStatus.Draft || cert.Status == CertStatus.PendingValidation {
+				log.Printf("Cleaning %s in %s status, id %s", cert.CommonName, cert.Status, cert.ID)
+				err = c.DeleteCert(cert.ID)
+				if err != nil {
+					log.Println(err)
+				}
+			}
+		}
+
+		// Last page.
+		if allCerts_.ResultCount < perPage_ {
+			break
+		}
 	}
 	return
 }

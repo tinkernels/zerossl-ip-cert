@@ -1,5 +1,6 @@
 dataDir: /var/local/zerossl # Data directory for containing the status and temporary files
 logFile: /var/local/zerossl/log.txt # Log file
+cleanUnfinished: true # Clean zerossl certificates that are not finished issuing.
 certConfigs:
   # Use confId to identify the certificate configuration
   - commonName: 4.3.2.1
