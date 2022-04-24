@@ -17,9 +17,10 @@
 package zerosslIPCert
 
 type ListCertsModel struct {
-	TotalCount  int                    `json:"total_count"`
-	ResultCount int                    `json:"result_count"`
-	Page        int                    `json:"page"`
-	Limit       int                    `json:"limit"`
-	Results     []CertificateInfoModel `json:"results"`
+	TotalCount  int `json:"total_count"`
+	ResultCount int `json:"result_count"`
+	// Don't use the page field, because page in response is dynamic typed.
+	//Page        string                 `json:"page"`
+	Limit   int                    `json:"limit"`
+	Results []CertificateInfoModel `json:"results"`
 }

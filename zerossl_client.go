@@ -197,14 +197,16 @@ func (c *Client) CleanUnfinished() (err error) {
 	log.Println("Cleaning unfinished certificates")
 	perPage_ := 100
 	page_ := 1
-	for allCerts_, err := c.ListCerts("", "", strconv.Itoa(perPage_), strconv.Itoa(page_)); true; page_++ {
+	for certs, err := c.ListCerts("", "", strconv.Itoa(perPage_), strconv.Itoa(page_)); true; page_++ {
 		if err != nil {
 			log.Println(err)
 			break
 		}
 
-		for _, cert := range allCerts_.Results {
-			if cert.Status == CertStatus.Draft || cert.Status == CertStatus.PendingValidation {
+		for _, cert := range certs.Results {
+			// Cleaning up certificates that are not finished (including cancelled).
+			if cert.Status == CertStatus.Draft || cert.Status == CertStatus.PendingValidation ||
+				cert.Status == CertStatus.Cancelled {
 				log.Printf("Cleaning %s in %s status, id %s", cert.CommonName, cert.Status, cert.ID)
 				err = c.DeleteCert(cert.ID)
 				if err != nil {
@@ -214,7 +216,7 @@ func (c *Client) CleanUnfinished() (err error) {
 		}
 
 		// Last page.
-		if allCerts_.ResultCount < perPage_ {
+		if certs.ResultCount < perPage_ {
 			break
 		}
 	}
