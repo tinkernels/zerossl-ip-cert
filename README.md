@@ -21,7 +21,7 @@ zerossl-ip-cert rely on configuration file to run. To archive the goal of issuin
 ### Usage Info
 
 ```
-Version: 0.2.1
+Version: 0.5.2
 
 Usage: zerossl-ip-cert [ -renew ] -config CONFIG_FILE
 
@@ -33,9 +33,9 @@ Usage: zerossl-ip-cert [ -renew ] -config CONFIG_FILE
 
 ### Configuration File
 
-You can find a sample configurationfile [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-config.yaml), with enough commentsin it.
+You can find a sample configuration file [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-config.yaml), with enough comments in it.
 
- And also a state record sample file [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-current.yaml), just for troubleshooting.
+ And also a sample  state record file [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-current.yaml), just for troubleshooting.
 
 ### External Hook
 
@@ -49,15 +49,15 @@ So you should have a http server running and prepare hook programs to finish the
 
   `ZEROSSL_HTTP_FV_PATH` stands for url path, where verification content will locate.
 
-  `ZEROSSL_HTTP_FV_PORT` stands for listening port, as far as I know, ZeroSSL only reach 80 port of your http server.
+  `ZEROSSL_HTTP_FV_PORT` stands for listening port, ZeroSSL only reach port `80` of your http server according to use experience.
 
   `ZEROSSL_HTTP_FV_CONTENT` stands for validation content, ZeroSSL will check it when domain verification started.
 
   And a sample script for nginx can be found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-nginx-verify-hook.sh), a sample script for caddy can be found [here](https://github.com/tinkernels/zerossl-ip-cert/blob/master/exec/sample-caddy-verify-hook.cmd).
 
-  P.S. When running in **Windows OS**, text lines is concatenaed with spaces in `%ZEROSSL_HTTP_FV_CONTENT%` as windows don't accept multiline variables without using magic.
+  *P.S.* When running in **Windows OS**, text lines are concatenated with spaces in `%ZEROSSL_HTTP_FV_CONTENT%`, as windows doesn't accept multiline variables without using magic.
 
-* **post-hook** will be called after certification downloading, and some other environment variables will be pass to it.
+* **post-hook** will be called after certification downloading, and some other environment variables will be passed to it.
 
   `ZEROSSL_CERT_FPATH` stands for the store path of certificate.
 
