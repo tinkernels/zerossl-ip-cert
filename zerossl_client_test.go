@@ -23,6 +23,7 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestZeroSSLClient_GetCert(t *testing.T) {
@@ -31,6 +32,14 @@ func TestZeroSSLClient_GetCert(t *testing.T) {
 	if err != nil {
 		t.Error(err)
 		return
+	}
+	expireTime_, err := time.Parse("2006-01-02 15:04:05", cert_.Expires)
+	if err != nil {
+		t.Error(err)
+	} else {
+		if time.Now().Add(time.Hour * 24 * 29).After(expireTime_) {
+			t.Log("Expiring soon.")
+		}
 	}
 	t.Logf("cert: %#v", cert_)
 }
@@ -114,4 +123,11 @@ func TestClient_ListCerts(t *testing.T) {
 		return
 	}
 	t.Logf("certs: %#v", rspModel_)
+}
+
+func Test_CleanUnfinished(t *testing.T) {
+	c_ := &Client{ApiKey: "x"}
+	if err := c_.CleanUnfinished(); err != nil {
+		t.Logf("Failed to clean unfinished issuing certificate: %v\n", err)
+	}
 }

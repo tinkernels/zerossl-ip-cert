@@ -210,28 +210,8 @@ func issueCertImpl(conf *CertConf) (certID string, err error) {
 		return
 	}
 	// Verify Domains.
-	verifyRsp_, err := client_.VerifyDomains(certInfo_.ID, zerosslIPCert.VerifyDomainsMethod.HttpCsrHash, "")
-	if err != nil {
-		log.Println(err)
-		return
-	}
-	log.Printf("domains verification result: %+v\n", verifyRsp_)
-	// Wait seconds before checking cert status.
-	time.Sleep(time.Second * 5)
-	certInfoTmp_, err := client_.GetCert(certInfo_.ID)
-	if err != nil {
-		log.Println(err)
-		return "", err
-	}
-	log.Printf("cert info: %+v", certInfoTmp_)
-	if certInfoTmp_.Status == zerosslIPCert.CertStatus.Draft {
-		err = fmt.Errorf("cert verification failed, still in draft status")
-		log.Println(err)
-		return "", err
-	}
-	// Wait for cert to be ready.
-	if err = waitCert2BReady(client_, &certInfo_); err != nil {
-		log.Println(err)
+	if err = verifyHttpCsrHash(client_, &certInfo_); err != nil {
+		log.Printf("verifying error: %v\n", err)
 		return
 	}
 	// Download cert.
@@ -270,6 +250,37 @@ func issueCertImpl(conf *CertConf) (certID string, err error) {
 	log.Printf("Cleaning temp files\n")
 	_ = os.RemoveAll(tempDir_)
 	certID = certInfo_.ID
+	return
+}
+
+func verifyHttpCsrHash(client *zerosslIPCert.Client, certInfo *zerosslIPCert.CertificateInfoModel) (err error) {
+	for retrying_ := 0; retrying_ < 20; retrying_++ {
+		verifyRsp_, err := client.VerifyDomains(certInfo.ID, zerosslIPCert.VerifyDomainsMethod.HttpCsrHash, "")
+		if err != nil {
+			log.Printf("verify error: %v\n", err)
+			time.Sleep(time.Second * 15)
+			continue
+		}
+		// NOTICE: ZeroSSL always return "Success:false" in HttpCsrHash verification.
+		log.Printf("domains verification result: %+v\n", verifyRsp_)
+		certInfoTmp_, err := client.GetCert(certInfo.ID)
+		if err != nil {
+			log.Printf("get cert error: %v\n", err)
+			time.Sleep(time.Second * 15)
+			continue
+		}
+		if certInfoTmp_.Status != zerosslIPCert.CertStatus.PendingValidation &&
+			certInfoTmp_.Status != zerosslIPCert.CertStatus.Issued {
+			log.Printf("cert in %v status\n", certInfoTmp_.Status)
+			time.Sleep(time.Second * 30)
+			continue
+		}
+		break
+	}
+	// Wait for cert to be ready.
+	if err = waitCert2BReady(client, certInfo); err != nil {
+		return err
+	}
 	return
 }
 
@@ -324,7 +335,7 @@ func runVerifyHook(executable string, cerInfo *zerosslIPCert.CertificateInfoMode
 
 // waitCert2BReady waits for the cert to be ready.
 func waitCert2BReady(client *zerosslIPCert.Client, certInfo *zerosslIPCert.CertificateInfoModel) (err error) {
-	for {
+	for i := 0; i < 10; i++ {
 		// loop every other seconds until cert is ready.
 		certInfo_, err := client.GetCert(certInfo.ID)
 		if err != nil {
@@ -335,8 +346,9 @@ func waitCert2BReady(client *zerosslIPCert.Client, certInfo *zerosslIPCert.Certi
 			log.Printf("cert is ready: %+v\n", certInfo_)
 			return nil
 		}
-		time.Sleep(time.Second * 15)
+		time.Sleep(time.Second * 30)
 	}
+	return fmt.Errorf("timeout of waiting cert to be ready")
 }
 
 func runPostHook(certConf *CertConf) (err error) {
@@ -390,9 +402,15 @@ func renewCert(id string, conf *CertConf) (err error) {
 		log.Printf("Failed to get cert info: %v\n", err)
 		return err
 	}
-	if certInfo_.Status != zerosslIPCert.CertStatus.ExpiringSoon {
-		log.Printf("Cert %v is not due for renewal, skip renewing.\n", conf.CommonName)
-		return nil
+	expireTime_, err := time.Parse("2006-01-02 15:04:05", certInfo_.Expires)
+	if err != nil {
+		log.Printf("Failed to convert expiring time: %v\n", err)
+	} else {
+		if certInfo_.Status != zerosslIPCert.CertStatus.ExpiringSoon &&
+			time.Now().Add(time.Hour*24*29).Before(expireTime_) {
+			log.Printf("Cert %v is not due for renewal, skip renewing.\n", conf.CommonName)
+			return nil
+		}
 	}
 	if usingConfig.CleanUnfinished {
 		if err := client_.CleanUnfinished(); err != nil {
