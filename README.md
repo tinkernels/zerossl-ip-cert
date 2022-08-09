@@ -3,7 +3,7 @@
 zerossl-ip-cert is a automation tool for issuing ZeroSSL IP certificates.
 
 * Use ZeroSSL [REST API](https://zerossl.com/documentation/api/)  to implement certificate issuing.
-* Mainly made for **IP** certificates.
+* Mainly made for **IP** certificates (ipv4 only for now).
 * Call external program for automatically verification.
 * Painless certificate renewal.
 * Cross platform (Linux/Macos/Windows).
@@ -21,7 +21,7 @@ zerossl-ip-cert rely on configuration file to run. To archive the goal of issuin
 ### Usage Info
 
 ```
-Version: 0.5.2
+Version: 1.0.0-beta.1
 
 Usage: zerossl-ip-cert [ -renew ] -config CONFIG_FILE
 
