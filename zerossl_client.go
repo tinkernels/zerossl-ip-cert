@@ -49,7 +49,12 @@ func (c *Client) GetCert(id string) (cert CertificateInfoModel, err error) {
 	}
 	err = json.NewDecoder(resp.Body).Decode(&cert)
 	if err != nil {
-		return CertificateInfoModel{}, err
+		if &cert == nil {
+			return
+		}
+		log.Println(err)
+		// The validation field in api response can an empty array, using the partially unmarshalled value.
+		return cert, nil
 	}
 	return
 }
@@ -188,7 +193,12 @@ func (c *Client) ListCerts(status, search, limit, page string) (listCertsRsp Lis
 	}
 	err = json.NewDecoder(resp.Body).Decode(&listCertsRsp)
 	if err != nil {
-		return ListCertsModel{}, err
+		if &listCertsRsp == nil {
+			return
+		}
+		log.Println(err)
+		// The validation field in api response can an empty array, using the partially unmarshalled value.
+		return listCertsRsp, nil
 	}
 	return
 }

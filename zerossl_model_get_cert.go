@@ -44,7 +44,7 @@ type CertificateInfoModel struct {
 	ValidationType    string              `json:"validation_type"`
 	ValidationEmails  string              `json:"validation_email"`
 	ReplacementFor    string              `json:"replacement_for"`
-	Validation        ValidationInfoModel `json:"validation"`
+	Validation        ValidationInfoModel `json:"validation,omitempty"`
 }
 
 type ValidationInfoModel struct {
