@@ -22,5 +22,5 @@ type ListCertsModel struct {
 	// Don't use the page field, because page in response is dynamic typed.
 	//Page        string                 `json:"page"`
 	Limit   int                    `json:"limit"`
-	Results []CertificateInfoModel `json:"results"`
+	Results []CertificateInfoModel `json:"results,omitempty"`
 }
