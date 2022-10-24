@@ -1,5 +1,7 @@
 # zerossl-ip-cert &middot; [![License](https://img.shields.io/hexpm/l/plug?logo=Github&style=flat)](https://github.com/tinkernels/zerossl-ip-cert/blob/master/LICENSE) [![Go Report Card](https://goreportcard.com/badge/github.com/tinkernels/zerossl-ip-cert)](https://goreportcard.com/report/github.com/tinkernels/zerossl-ip-cert) [![Go Reference](https://pkg.go.dev/badge/github.com/tinkernels/zerossl-ip-cert.svg)](https://pkg.go.dev/github.com/tinkernels/zerossl-ip-cert) [![Build workflow](https://github.com/tinkernels/zerossl-ip-cert/actions/workflows/build.yml/badge.svg)](https://github.com/tinkernels/zerossl-ip-cert/actions/workflows/build.yml)
 
+## ⚠️WARNING: ZeroSSL removed the `Delete Certificate` API endpoint, free account can't renew certificate infinitely.
+
 zerossl-ip-cert is a automation tool for issuing ZeroSSL IP certificates.
 
 * Use ZeroSSL [REST API](https://zerossl.com/documentation/api/)  to implement certificate issuing.
