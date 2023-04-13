@@ -23,8 +23,6 @@ zerossl-ip-cert rely on configuration file to run. To archive the goal of issuin
 ### Usage Info
 
 ```
-Version: 1.0.0-beta.1
-
 Usage: zerossl-ip-cert [ -renew ] -config CONFIG_FILE
 
   -config string
