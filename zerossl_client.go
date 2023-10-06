@@ -214,9 +214,9 @@ func (c *Client) CleanUnfinished() (err error) {
 		}
 
 		for _, cert := range certs.Results {
-			// Cleaning up certificates that are not finished (including cancelled, expired).
+			// Cleaning up certificates that are not finished (including draft,PendingValidation and expired).
 			if cert.Status == CertStatus.Draft || cert.Status == CertStatus.PendingValidation ||
-				cert.Status == CertStatus.Cancelled || cert.Status == CertStatus.Expired {
+				cert.Status == CertStatus.Expired {
 				log.Printf("Cleaning %s in %s status, id %s", cert.CommonName, cert.Status, cert.ID)
 				err = c.DeleteCert(cert.ID)
 				if err != nil {
