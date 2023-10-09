@@ -20,7 +20,6 @@ import (
 	"crypto/x509/pkix"
 	"flag"
 	"fmt"
-	"github.com/tinkernels/zerossl-ip-cert"
 	"io"
 	"log"
 	"net/url"
@@ -31,10 +30,12 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	zerosslIPCert "github.com/tinkernels/zerossl-ip-cert"
 )
 
 // Version is the version of this application.
-const Version = "v1.0.0"
+const Version = "v1.0.1"
 
 var (
 	renewFlag  = flag.Bool("renew", false, "Renew existing certs only")
@@ -96,6 +97,7 @@ func main() {
 			currentData = currentData_
 		}
 	} else {
+		log.Printf("Current Config File not found: %s", currentDataFilePath)
 		currentData = &CurrentData{}
 	}
 	if *renewFlag {

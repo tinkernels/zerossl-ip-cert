@@ -35,9 +35,9 @@ type VerifyDomainsModel struct {
 }
 
 type VerifyDomainsErrorModel struct {
-	Code    int                                                 `json:"code"`
-	Type    string                                              `json:"type"`
-	Details map[string]map[string]VerifyDomainsErrorDetailModel `json:"details"`
+	Code    int                           `json:"code"`
+	Type    string                        `json:"type"`
+	Details VerifyDomainsErrorDetailModel `json:"details"`
 }
 
 type VerifyDomainsErrorDetailModel struct {
