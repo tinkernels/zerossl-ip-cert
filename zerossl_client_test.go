@@ -75,7 +75,7 @@ func TestClient_CreateCert(t *testing.T) {
 
 func TestClient_DeleteCert(t *testing.T) {
 	c_ := &Client{ApiKey: "x"}
-	err := c_.DeleteCert("x")
+	err := c_.CancelCert("x")
 	if err != nil {
 		t.Error(err)
 		return

@@ -83,9 +83,9 @@ func (c *Client) CreateCert(domains, csr, days, isStrictDomains string) (cert Ce
 	return
 }
 
-// DeleteCert deletes a certificate.
-func (c *Client) DeleteCert(id string) (err error) {
-	req_ := ApiReqFactory.DeleteCertificate(c.ApiKey, id)
+// Cancel a certificate.
+func (c *Client) CancelCert(id string) (err error) {
+	req_ := ApiReqFactory.CancelCertificate(c.ApiKey, id)
 	resp, err := http.DefaultClient.Do(req_)
 	if err != nil {
 		return err
@@ -206,8 +206,11 @@ func (c *Client) ListCerts(status, search, limit, page string) (listCertsRsp Lis
 func (c *Client) CleanUnfinished() (err error) {
 	log.Println("Cleaning unfinished certificates")
 	perPage_ := 100
-	page_ := 1
-	for certs, err := c.ListCerts("", "", strconv.Itoa(perPage_), strconv.Itoa(page_)); true; page_++ {
+	max := 1
+	for page_ := 1; page_-1 <= max; page_++ {
+		certs, err := c.ListCerts("", "draft,pending_validation", strconv.Itoa(perPage_), strconv.Itoa(page_))
+		max = certs.TotalCount / perPage_
+		log.Printf("page_: %d max: %d ResultCount: %d", page_, max, certs.ResultCount)
 		if err != nil {
 			log.Println(err)
 			break
@@ -215,19 +218,13 @@ func (c *Client) CleanUnfinished() (err error) {
 
 		for _, cert := range certs.Results {
 			// Cleaning up certificates that are not finished (including cancelled, expired).
-			if cert.Status == CertStatus.Draft || cert.Status == CertStatus.PendingValidation ||
-				cert.Status == CertStatus.Cancelled || cert.Status == CertStatus.Expired {
+			if cert.Status == CertStatus.Draft || cert.Status == CertStatus.PendingValidation {
 				log.Printf("Cleaning %s in %s status, id %s", cert.CommonName, cert.Status, cert.ID)
-				err = c.DeleteCert(cert.ID)
+				err = c.CancelCert(cert.ID)
 				if err != nil {
 					log.Println(err)
 				}
 			}
-		}
-
-		// Last page.
-		if certs.ResultCount < perPage_ {
-			break
 		}
 	}
 	return
